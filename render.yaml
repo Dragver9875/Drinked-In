@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: omnitransform
+    name: contentx
     runtime: python
     plan: free
     buildCommand: pip install -r requirements-web.txt
@@ -21,7 +21,7 @@ services:
         value: postgres
       - key: SESSION_DATABASE_URL
         fromDatabase:
-          name: omnitransform-db
+          name: contentx-db
           property: connectionString
       - key: PHASE6_OUTPUT_DIR
         value: runtime_artifacts
@@ -55,7 +55,7 @@ services:
         value: auto
 
 databases:
-  - name: omnitransform-db
+  - name: contentx-db
     plan: free
-    databaseName: omnitransform
-    user: omnitransform
+    databaseName: contentx
+    user: contentx

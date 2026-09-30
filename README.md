@@ -1,4 +1,4 @@
-# OmniTransform — Gen-AI Platform for Automated Content Transformation
+# ContentX — Gen-AI Platform for Automated Content Transformation
 
 API-native multimodal content transformation pipeline built around one shared visual/document encoder and one shared semantic decoder.
 
