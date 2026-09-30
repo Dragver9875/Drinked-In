@@ -35,9 +35,9 @@ class IngestionRouter:
     """Single-path multimodal ingestion.
 
     * TXT/MD are read directly.
-    * Every image goes through Qwen2.5-VL.
-    * Every PDF page is rasterized and goes through Qwen2.5-VL.
-    * Every PPTX slide is locally rasterized and goes through Qwen2.5-VL.
+    * Every image goes through the shared multimodal VLM.
+    * Every PDF page is rasterized and goes through the shared multimodal VLM.
+    * Every PPTX slide is locally rasterized and goes through the shared multimodal VLM.
 
     There is deliberately no SigLIP, document/photo classifier, OCR-specific
     model, Granite Docling, or PDF preflight branch. The objective is a smaller,
@@ -114,7 +114,7 @@ class IngestionRouter:
         warnings: list[str] = []
         if len(rendered) < total_pages:
             warnings.append(
-                f"PDF has {total_pages} pages; Qwen2.5-VL encoding was capped at {len(rendered)} page(s) by "
+                f"PDF has {total_pages} pages; the shared multimodal VLM encoding was capped at {len(rendered)} page(s) by "
                 "MULTIMODAL_MAX_PDF_PAGES. Set it to 0 for unlimited processing."
             )
 
@@ -125,28 +125,28 @@ class IngestionRouter:
                 self.vlm.describe_bytes(png, prompt=self.document_prompt, media_type="image/png")
             )
             if not encoded:
-                warnings.append(f"Qwen2.5-VL returned empty content for PDF page {page_number}.")
+                warnings.append(f"the shared multimodal VLM returned empty content for PDF page {page_number}.")
                 continue
             if getattr(self.vlm, "last_model_used", None):
                 models_used.add(str(self.vlm.last_model_used))
             elements.append(
                 SourceElement(
-                    element_id=f"qwen-pdf-{page_number}",
+                    element_id=f"vlm-pdf-{page_number}",
                     kind="multimodal_page",
                     text=encoded,
                     page=page_number,
-                    metadata={"processor": "qwen2.5-vl", "render_dpi": self.render_dpi},
+                    metadata={"processor": "multimodal-vlm", "render_dpi": self.render_dpi},
                 )
             )
 
         if not elements:
-            raise RuntimeError("Qwen2.5-VL did not return usable content for any PDF page.")
+            raise RuntimeError("the shared multimodal VLM did not return usable content for any PDF page.")
 
         return IngestionResult(
             source_id,
             path.name,
             media_type,
-            "qwen2.5-vl-pdf",
+            "multimodal-vlm-pdf",
             elements,
             warnings=warnings,
             provider_metadata={
@@ -163,7 +163,7 @@ class IngestionRouter:
         warnings: list[str] = []
         if len(rendered) < total_slides:
             warnings.append(
-                f"PPTX has {total_slides} slides; Qwen2.5-VL encoding was capped at {len(rendered)} slide(s) by "
+                f"PPTX has {total_slides} slides; the shared multimodal VLM encoding was capped at {len(rendered)} slide(s) by "
                 "MULTIMODAL_MAX_PPTX_SLIDES. Set it to 0 for unlimited processing."
             )
 
@@ -174,28 +174,28 @@ class IngestionRouter:
                 self.vlm.describe_bytes(png, prompt=self.document_prompt, media_type="image/png")
             )
             if not encoded:
-                warnings.append(f"Qwen2.5-VL returned empty content for PPTX slide {slide_number}.")
+                warnings.append(f"the shared multimodal VLM returned empty content for PPTX slide {slide_number}.")
                 continue
             if getattr(self.vlm, "last_model_used", None):
                 models_used.add(str(self.vlm.last_model_used))
             elements.append(
                 SourceElement(
-                    element_id=f"qwen-pptx-{slide_number}",
+                    element_id=f"vlm-pptx-{slide_number}",
                     kind="multimodal_slide",
                     text=encoded,
                     slide=slide_number,
-                    metadata={"processor": "qwen2.5-vl", "renderer": "python-pptx+pillow"},
+                    metadata={"processor": "multimodal-vlm", "renderer": "python-pptx+pillow"},
                 )
             )
 
         if not elements:
-            raise RuntimeError("Qwen2.5-VL did not return usable content for any PPTX slide.")
+            raise RuntimeError("the shared multimodal VLM did not return usable content for any PPTX slide.")
 
         return IngestionResult(
             source_id,
             path.name,
             media_type,
-            "qwen2.5-vl-pptx",
+            "multimodal-vlm-pptx",
             elements,
             warnings=warnings,
             provider_metadata={
@@ -210,18 +210,18 @@ class IngestionRouter:
     def _ingest_image(self, path: Path, source_id: str, media_type: str) -> IngestionResult:
         encoded = normalize_text(self.vlm.describe_file(path, prompt=self.image_prompt))
         if not encoded:
-            raise RuntimeError("Qwen2.5-VL returned empty content for image input.")
+            raise RuntimeError("the shared multimodal VLM returned empty content for image input.")
         return IngestionResult(
             source_id,
             path.name,
             media_type,
-            "qwen2.5-vl-image",
+            "multimodal-vlm-image",
             [
                 SourceElement(
-                    "qwen-image-0",
+                    "vlm-image-0",
                     "multimodal_image",
                     encoded,
-                    metadata={"processor": "qwen2.5-vl"},
+                    metadata={"processor": "multimodal-vlm"},
                 )
             ],
             provider_metadata={

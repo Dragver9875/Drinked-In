@@ -123,7 +123,7 @@ def render_pptx_slides(
 
     This is intentionally approximate rather than a PowerPoint renderer. It
     preserves text-box positions, tables, chart data, and embedded pictures so
-    every slide can still pass through the same Qwen2.5-VL encoder without
+    every slide can still pass through the same shared multimodal VLM without
     requiring PowerPoint/LibreOffice on the host.
     """
     presentation = Presentation(str(path))
