@@ -1,4 +1,4 @@
-# Simplified Runtime Architecture
+# ContentX — Simplified Runtime Architecture
 
 ## Model graph
 

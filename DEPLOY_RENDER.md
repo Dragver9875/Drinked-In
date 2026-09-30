@@ -1,4 +1,4 @@
-# Render deployment
+# ContentX — Render deployment
 
 The repository deploys as **one FastAPI web service + one Render Postgres database**.
 The frontend is a static SPA served by FastAPI, so there is no Node/Vite build step.
