@@ -172,8 +172,8 @@ class Runtime:
 
 runtime = Runtime()
 jobs = JobStore()
-executor = ThreadPoolExecutor(max_workers=MAX_WORKERS, thread_name_prefix="omnitransform")
-app = FastAPI(title="OmniTransform", version="1.0")
+executor = ThreadPoolExecutor(max_workers=MAX_WORKERS, thread_name_prefix="contentx")
+app = FastAPI(title="ContentX", version="1.0")
 
 
 def _session_has_sources(agent, user_id: str, chat_id: str) -> bool:
@@ -322,7 +322,7 @@ def health():
     credentials = _credential_status()
     return {
         "ok": True,
-        "service": "omnitransform",
+        "service": "contentx",
         "workers": MAX_WORKERS,
         "runtime_error": runtime.init_error,
         "credentials_present": credentials,

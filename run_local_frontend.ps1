@@ -15,7 +15,7 @@ Set-Location $RepoRoot
 function Step([string]$m) { Write-Host "`n==> $m" -ForegroundColor Cyan }
 function Fail([string]$m) { Write-Host "[ERROR] $m" -ForegroundColor Red; exit 1 }
 
-Write-Host "OmniTransform local chat frontend" -ForegroundColor Green
+Write-Host "ContentX local chat frontend" -ForegroundColor Green
 Write-Host "Same FastAPI + web/ interface used on Render." -ForegroundColor DarkGray
 
 if (-not (Test-Path ".env")) {

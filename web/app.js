@@ -1,6 +1,6 @@
 (() => {
-  const STORAGE_KEY = 'omnitransform-ui-v1';
-  const CLIENT_KEY = 'omnitransform-client-id';
+  const STORAGE_KEY = 'contentx-ui-v1';
+  const CLIENT_KEY = 'contentx-client-id';
   const outputDefs = [
     {id:'text', label:'Text', hint:'Plain text / Markdown'},
     {id:'pdf', label:'PDF', hint:'Polished PDF via Typst'},
@@ -116,14 +116,14 @@
       if ((m.warnings||[]).length) body += `<div class="warning-block">${m.warnings.map(escapeHtml).join('<br>')}</div>`;
       if (m.performance?.wall_time_ms) body += `<div class="meta-line">Completed in ${(m.performance.wall_time_ms/1000).toFixed(1)}s${m.verification?.faithfulness_score!=null ? ` · faithfulness ${Number(m.verification.faithfulness_score).toFixed(3)}`:''}</div>`;
     }
-    return `<div class="message assistant"><div class="assistant-wrap"><div class="assistant-avatar">O</div><div>${body}</div></div></div>`;
+    return `<div class="message assistant"><div class="assistant-wrap"><div class="assistant-avatar">C</div><div>${body}</div></div></div>`;
   }
 
   function renderConversation() {
     const chat = activeChat();
     els.title.textContent = chat?.title || 'New chat';
     els.send.disabled = Boolean(chat?.running);
-    els.input.placeholder = chat?.running ? 'This chat is working — open a new chat to continue in parallel' : 'Message OmniTransform';
+    els.input.placeholder = chat?.running ? 'This chat is working — open a new chat to continue in parallel' : 'Message ContentX';
     if (!chat || !chat.messages.length) { els.empty.style.display='flex'; els.messages.innerHTML=''; return; }
     els.empty.style.display='none';
     els.messages.innerHTML = chat.messages.map(renderMessage).join('');
