@@ -46,13 +46,13 @@ Open `http://127.0.0.1:8000`.
 
 ## Renaming an existing Render service to ContentX
 
-The Blueprint service name is `contentx`, but an older manually created Render service may still be named `omnitransform`. Rename that existing service in Render so its public `onrender.com` hostname also uses the ContentX name.
+The Blueprint service name is `contentx`. If the existing Render service still uses a legacy name, rename it to `contentx` so its public `onrender.com` hostname also uses the ContentX name.
 
 Dashboard:
 
 1. Open the existing web service.
 2. Go to **Settings**.
-3. Change **Name** from `omnitransform` to `contentx`.
+3. Change **Name** to `contentx`.
 4. Save. Render will update the service identity and its generated `onrender.com` hostname.
 
 CLI equivalent:

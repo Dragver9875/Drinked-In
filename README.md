@@ -101,7 +101,7 @@ Default URL:
 http://127.0.0.1:8000
 ```
 
-The local launcher serves `web/index.html`, `web/styles.css`, and `web/app.js` through `app.web_server:app`. There is no separate Streamlit UI. Local and Render use the same chat composer, attachment flow, output checklist, parallel-chat job handling, and artifact downloads.
+The local launcher serves `web/index.html`, `web/styles.css`, and `web/app.js` through `app.web_server:app`. Local and Render use the same chat composer, attachment flow, output checklist, parallel-chat job handling, and artifact downloads.
 
 Use another port with:
 

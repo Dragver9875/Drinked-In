@@ -18,4 +18,4 @@ chmod +x ./run_local_frontend.sh
 ./run_local_frontend.sh
 ```
 
-Local sessions default to in-memory storage. Provider calls and Chroma remain real. Configure credentials in `.env`. There is no Streamlit dependency or alternate GUI.
+Local sessions default to in-memory storage. Provider calls and Chroma remain real. Configure credentials in `.env`. This FastAPI-served SPA is the only frontend.
