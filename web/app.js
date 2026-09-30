@@ -123,7 +123,7 @@
     const chat = activeChat();
     els.title.textContent = chat?.title || 'New chat';
     els.send.disabled = Boolean(chat?.running);
-    els.input.placeholder = chat?.running ? 'This chat is working — open a new chat to continue in parallel' : 'Message ContentX';
+    els.input.placeholder = chat?.running ? 'This chat is working — open a new chat to continue in parallel' : 'Ask ContentX to transform, summarize, or create…';
     if (!chat || !chat.messages.length) { els.empty.style.display='flex'; els.messages.innerHTML=''; return; }
     els.empty.style.display='none';
     els.messages.innerHTML = chat.messages.map(renderMessage).join('');
