@@ -59,8 +59,12 @@ print("VLM:", s.multimodal_model)
 print("LLM:", s.llm_model)
 print("Session backend:", s.session_store_backend)
 '@
-& $VenvPython -c $preflight
-if ($LASTEXITCODE -ne 0) { Fail "Configuration validation failed. Check .env." }
+# Feed the preflight program over stdin instead of python -c. PowerShell can
+# strip embedded quotes from multiline native-process arguments, which turns
+# load_dotenv(".env") into invalid load_dotenv(.env).
+$preflight | & $VenvPython -
+$preflightExit = $LASTEXITCODE
+if ($preflightExit -ne 0) { Fail "Configuration validation failed. Check .env." }
 
 Step "Compiling project"
 & $VenvPython -m compileall -q app agents artifacts core database evaluation generation ingestion providers retrieval scripts verification

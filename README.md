@@ -106,7 +106,7 @@ The local launcher serves `web/index.html`, `web/styles.css`, and `web/app.js` t
 Use another port with:
 
 ```powershell
-.\deploy_locally.ps1 -Port 8001
+.\run_local_frontend.ps1 -Port 8001
 ```
 
 Linux/macOS:
