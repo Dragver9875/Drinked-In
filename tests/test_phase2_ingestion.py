@@ -10,7 +10,7 @@ from ingestion.router import IngestionRouter
 
 
 class FakeVLM:
-    model = "Qwen/Qwen2.5-VL-3B-Instruct"
+    model = "Qwen/Qwen3-VL-2B-Instruct"
 
     def __init__(self):
         self.byte_calls = 0
@@ -66,7 +66,7 @@ def test_every_image_goes_directly_through_shared_qwen_encoder(tmp_path: Path):
     file.write_bytes(b"fake-image-bytes")
     vlm = FakeVLM()
     result = make_router(vlm=vlm).ingest(file)
-    assert result.strategy == "qwen2.5-vl-image"
+    assert result.strategy == "multimodal-vlm-image"
     assert vlm.file_calls == 1
     assert result.provider_metadata["shared_encoder"] == vlm.model
     assert "label 42" in result.text
@@ -77,7 +77,7 @@ def test_document_page_image_uses_same_shared_encoder_no_router(tmp_path: Path):
     file.write_bytes(b"fake-document-image")
     vlm = FakeVLM()
     result = make_router(vlm=vlm).ingest(file)
-    assert result.strategy == "qwen2.5-vl-image"
+    assert result.strategy == "multimodal-vlm-image"
     assert vlm.file_calls == 1
     assert "scanned document page" in vlm.prompts[0]
 
@@ -92,7 +92,7 @@ def test_native_pdf_also_goes_through_qwen_per_page(tmp_path: Path):
 
     vlm = FakeVLM()
     result = make_router(vlm=vlm).ingest(pdf_path)
-    assert result.strategy == "qwen2.5-vl-pdf"
+    assert result.strategy == "multimodal-vlm-pdf"
     assert vlm.byte_calls == 1
     assert result.provider_metadata["pages_encoded"] == 1
     assert result.provider_metadata["shared_encoder"] == vlm.model
@@ -141,7 +141,7 @@ def test_every_pptx_slide_is_rasterized_then_encoded_by_qwen(tmp_path: Path):
 
     vlm = FakeVLM()
     result = make_router(vlm=vlm).ingest(path)
-    assert result.strategy == "qwen2.5-vl-pptx"
+    assert result.strategy == "multimodal-vlm-pptx"
     assert vlm.byte_calls == 2
     assert result.provider_metadata["slides_encoded"] == 2
     assert result.provider_metadata["slide_renderer"] == "python-pptx+pillow"
