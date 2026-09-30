@@ -4,9 +4,9 @@
 
 ```text
 TXT/MD ------------------------------- direct text
-IMAGE -------------------------------- Qwen2.5-VL
-PDF -> PyMuPDF page rasterization ---- Qwen2.5-VL
-PPTX -> python-pptx/Pillow raster ----- Qwen2.5-VL
+IMAGE -------------------------------- Qwen3-VL 2B
+PDF -> PyMuPDF page rasterization ---- Qwen3-VL 2B
+PPTX -> python-pptx/Pillow raster ----- Qwen3-VL 2B
                                          |
                                          v
                                   Unified Source IR
@@ -46,7 +46,7 @@ The target is a hackathon/demo system where deployment reliability matters more 
 
 ## Known trade-off
 
-Every PDF page and every PPTX slide now incurs a Qwen2.5-VL call. This is intentionally simpler but slower/more expensive than selective visual fallback. `MULTIMODAL_MAX_PDF_PAGES` and `MULTIMODAL_MAX_PPTX_SLIDES` provide explicit caps for interactive testing.
+Every PDF page and every PPTX slide now incurs a shared multimodal VLM call. This is intentionally simpler but slower/more expensive than selective visual fallback. `MULTIMODAL_MAX_PDF_PAGES` and `MULTIMODAL_MAX_PPTX_SLIDES` provide explicit caps for interactive testing.
 
 ## Evidence aliasing
 
