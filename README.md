@@ -81,28 +81,35 @@ SESSION_DATABASE_URL=postgresql://...
 
 All model calls can reuse `HF_TOKEN`. See `.env.example` for tuning options.
 
-## Local GUI
+## Local chat frontend
+
+Run the same FastAPI + static SPA used on Render:
 
 ```powershell
 Unblock-File .\deploy_locally.ps1
-.\deploy_locally.ps1 -RunSmokeTests
+.\deploy_locally.ps1
 ```
-
-The launcher creates `.venv_local`, installs GUI/runtime dependencies, validates `.env`, compiles the project, optionally runs focused tests, starts Streamlit, polls its health endpoint and only then opens the browser.
 
 Default URL:
 
 ```text
-http://127.0.0.1:8501
+http://127.0.0.1:8000
 ```
+
+The local launcher serves `web/index.html`, `web/styles.css`, and `web/app.js` through `app.web_server:app`. There is no separate Streamlit UI. Local and Render use the same chat composer, attachment flow, output checklist, parallel-chat job handling, and artifact downloads.
 
 Use another port with:
 
 ```powershell
-.\deploy_locally.ps1 -Port 8502
+.\deploy_locally.ps1 -Port 8001
 ```
 
-The GUI invokes the real `build_phase6()` pipeline. It shows ingestion strategy, provider telemetry, wall-clock time, retrieval mode, verification metrics, warnings/errors, and generated artifacts.
+Linux/macOS:
+
+```bash
+chmod +x ./run_local_frontend.sh
+./run_local_frontend.sh
+```
 
 ## PowerShell CLI
 
@@ -160,8 +167,8 @@ An HF-compatible reranker can still be enabled with `RERANKER_API_URL`, but it i
 
 - Python source artifact package: `artifacts/`
 - Generated files: `runtime_artifacts/`
-- Local GUI temporary uploads: `.local_gui_uploads/`
-- Local GUI logs: `.runtime_logs/`
+- Local web uploads: `runtime_uploads/`
+- Local web logs: `.runtime_logs/`
 
 Do not change `PHASE6_OUTPUT_DIR` back to `artifacts`; that directory contains Python source code.
 
