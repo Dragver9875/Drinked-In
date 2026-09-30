@@ -86,8 +86,13 @@ All model calls can reuse `HF_TOKEN`. See `.env.example` for tuning options.
 Run the same FastAPI + static SPA used on Render:
 
 ```powershell
-Unblock-File .\deploy_locally.ps1
-.\deploy_locally.ps1
+.\run_local_frontend.ps1
+```
+
+If Windows execution policy blocks unsigned PowerShell scripts, use the policy-safe launcher instead:
+
+```cmd
+run_local_frontend.cmd
 ```
 
 Default URL:
