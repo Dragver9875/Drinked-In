@@ -42,3 +42,23 @@ uvicorn app.web_server:app --host 127.0.0.1 --port 8000 --reload
 ```
 
 Open `http://127.0.0.1:8000`.
+
+
+## Renaming an existing Render service to ContentX
+
+The Blueprint service name is `contentx`, but an older manually created Render service may still be named `omnitransform`. Rename that existing service in Render so its public `onrender.com` hostname also uses the ContentX name.
+
+Dashboard:
+
+1. Open the existing web service.
+2. Go to **Settings**.
+3. Change **Name** from `omnitransform` to `contentx`.
+4. Save. Render will update the service identity and its generated `onrender.com` hostname.
+
+CLI equivalent:
+
+```bash
+render services update srv-darjci8jo6nc7387h5h0 --name contentx --output json
+```
+
+After the rename, use the URL shown in Render's service header or `RENDER_EXTERNAL_URL` as the canonical public link. The exact suffix is assigned by Render.

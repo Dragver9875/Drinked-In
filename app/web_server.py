@@ -492,4 +492,4 @@ def spa(full_path: str):
     index = WEB_ROOT / "index.html"
     if not index.exists():
         raise HTTPException(status_code=500, detail="Frontend assets are missing")
-    return FileResponse(index)
+    return FileResponse(index, headers={"Cache-Control": "no-store, max-age=0"})
