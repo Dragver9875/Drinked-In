@@ -6,7 +6,7 @@ API-native multimodal content transformation pipeline built around one shared vi
 
 | Role | Model / component |
 |---|---|
-| Multimodal understanding for images, PDF pages and PPTX slides | `Qwen/Qwen2.5-VL-3B-Instruct` via Hugging Face |
+| Multimodal understanding for images, PDF pages and PPTX slides | `Qwen/Qwen3-VL-2B-Instruct` via Hugging Face |
 | Retrieval embeddings | `microsoft/harrier-oss-v1-0.6b` via Hugging Face |
 | Semantic generation, verification, repair and artifact planning | `openai/gpt-oss-20b:fastest` via Hugging Face |
 | Creative image decoding | `black-forest-labs/FLUX.1-schnell` via Hugging Face Inference Providers |
@@ -20,9 +20,9 @@ No local model weights, CUDA runtime, SigLIP, Granite Docling, MinerU, OCR-speci
 ```text
 TXT / MD ------------------------------> direct text
 
-IMAGE ---------------------> Qwen2.5-VL -----+
-PDF -> render each page ----> Qwen2.5-VL -----+--> Unified Source IR
-PPTX -> render each slide --> Qwen2.5-VL -----+
+IMAGE ---------------------> Qwen3-VL 2B -----+
+PDF -> render each page ----> Qwen3-VL 2B -----+--> Unified Source IR
+PPTX -> render each slide --> Qwen3-VL 2B -----+
                                                |
                                                v
                                       structure-aware chunks
@@ -54,9 +54,9 @@ gpt-oss-20b prompt plan -> FLUX.1-schnell -> PNG
 
 ## Multimodal ingestion behavior
 
-The runtime deliberately does not classify inputs into “document image” vs “normal image.” Qwen2.5-VL receives every supported image directly with a retrieval-oriented prompt. If the image is a photo/scan of a document page, the prompt tells Qwen to transcribe it rather than merely describe it.
+The runtime deliberately does not classify inputs into “document image” vs “normal image.” Qwen3-VL 2B receives every supported image directly with a retrieval-oriented prompt. If the image is a photo/scan of a document page, the prompt tells Qwen to transcribe it rather than merely describe it.
 
-PDF files are rasterized page-by-page with PyMuPDF, then every rendered page is encoded by Qwen2.5-VL. PPTX files are rendered locally to slide canvases using `python-pptx` + Pillow: text, tables, chart data and embedded pictures are placed onto an approximate slide image, then every slide is encoded by the same Qwen2.5-VL provider. This avoids requiring Microsoft PowerPoint or LibreOffice locally.
+PDF files are rasterized page-by-page with PyMuPDF, then every rendered page is encoded by Qwen3-VL 2B. PPTX files are rendered locally to slide canvases using `python-pptx` + Pillow: text, tables, chart data and embedded pictures are placed onto an approximate slide image, then every slide is encoded by the same Qwen3-VL 2B provider. This avoids requiring Microsoft PowerPoint or LibreOffice locally.
 
 `MULTIMODAL_MAX_PDF_PAGES` and `MULTIMODAL_MAX_PPTX_SLIDES` guard against accidental huge interactive jobs. Set either to `0` for unlimited processing.
 
@@ -81,28 +81,35 @@ SESSION_DATABASE_URL=postgresql://...
 
 All model calls can reuse `HF_TOKEN`. See `.env.example` for tuning options.
 
-## Local GUI
+## Local chat frontend
+
+Run the same FastAPI + static SPA used on Render:
 
 ```powershell
 Unblock-File .\deploy_locally.ps1
-.\deploy_locally.ps1 -RunSmokeTests
+.\deploy_locally.ps1
 ```
-
-The launcher creates `.venv_local`, installs GUI/runtime dependencies, validates `.env`, compiles the project, optionally runs focused tests, starts Streamlit, polls its health endpoint and only then opens the browser.
 
 Default URL:
 
 ```text
-http://127.0.0.1:8501
+http://127.0.0.1:8000
 ```
+
+The local launcher serves `web/index.html`, `web/styles.css`, and `web/app.js` through `app.web_server:app`. There is no separate Streamlit UI. Local and Render use the same chat composer, attachment flow, output checklist, parallel-chat job handling, and artifact downloads.
 
 Use another port with:
 
 ```powershell
-.\deploy_locally.ps1 -Port 8502
+.\deploy_locally.ps1 -Port 8001
 ```
 
-The GUI invokes the real `build_phase6()` pipeline. It shows ingestion strategy, provider telemetry, wall-clock time, retrieval mode, verification metrics, warnings/errors, and generated artifacts.
+Linux/macOS:
+
+```bash
+chmod +x ./run_local_frontend.sh
+./run_local_frontend.sh
+```
 
 ## PowerShell CLI
 
@@ -160,8 +167,8 @@ An HF-compatible reranker can still be enabled with `RERANKER_API_URL`, but it i
 
 - Python source artifact package: `artifacts/`
 - Generated files: `runtime_artifacts/`
-- Local GUI temporary uploads: `.local_gui_uploads/`
-- Local GUI logs: `.runtime_logs/`
+- Local web uploads: `runtime_uploads/`
+- Local web logs: `.runtime_logs/`
 
 Do not change `PHASE6_OUTPUT_DIR` back to `artifacts`; that directory contains Python source code.
 

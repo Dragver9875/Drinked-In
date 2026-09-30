@@ -32,7 +32,7 @@ services:
       - key: WEB_MAX_TOTAL_UPLOAD_MB
         value: "100"
       - key: QWEN_VL_MODEL
-        value: Qwen/Qwen2.5-VL-3B-Instruct:featherless-ai
+        value: Qwen/Qwen3-VL-2B-Instruct:featherless-ai
       - key: QWEN_VL_MAX_IMAGE_SIDE
         value: "1800"
       - key: QWEN_VL_MAX_IMAGE_BYTES

@@ -40,7 +40,7 @@ def test_single_hf_token_configures_entire_model_layer(monkeypatch):
 
     assert settings.multimodal_api_key == "hf_test_token"
     assert settings.multimodal_api_url == "https://router.huggingface.co/v1/chat/completions"
-    assert settings.multimodal_model == "Qwen/Qwen2.5-VL-3B-Instruct"
+    assert settings.multimodal_model == "Qwen/Qwen3-VL-2B-Instruct:featherless-ai"
 
     assert settings.llm_api_key == "hf_test_token"
     assert settings.llm_api_url == "https://router.huggingface.co/v1/chat/completions"
@@ -55,12 +55,12 @@ def test_single_hf_token_configures_entire_model_layer(monkeypatch):
 def test_old_vlm_env_names_are_accepted_as_migration_aliases(monkeypatch):
     values = dict(BASE_ENV)
     values.update({
-        "VLM_MODEL": "Qwen/Qwen2.5-VL-3B-Instruct",
+        "VLM_MODEL": "example/legacy-vlm",
         "VLM_API_URL": "https://router.huggingface.co/v1/chat/completions",
     })
     _set_env(monkeypatch, values)
     settings = Settings.from_env()
-    assert settings.multimodal_model == "Qwen/Qwen2.5-VL-3B-Instruct"
+    assert settings.multimodal_model == "example/legacy-vlm"
     assert settings.multimodal_api_key == "hf_test_token"
 
 

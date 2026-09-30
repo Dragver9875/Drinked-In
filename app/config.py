@@ -136,7 +136,7 @@ class Settings:
     reranker_api_style: str
     reranker_model: str
 
-    # Single shared multimodal encoder: Qwen2.5-VL.
+    # Single shared multimodal encoder.
     multimodal_api_url: str
     multimodal_api_key: str
     multimodal_api_style: str
@@ -228,7 +228,7 @@ class Settings:
         multimodal_model = (
             _env("QWEN_VL_MODEL")
             or _env("VLM_MODEL")
-            or "Qwen/Qwen2.5-VL-3B-Instruct:featherless-ai"
+            or "Qwen/Qwen3-VL-2B-Instruct:featherless-ai"
         )
         multimodal_api_url = (
             _clean_endpoint(_env("QWEN_VL_API_URL"))

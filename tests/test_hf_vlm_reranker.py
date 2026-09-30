@@ -17,11 +17,11 @@ class _FakeResponse:
         return self._data
 
 
-def test_qwen25_vl_openai_multimodal_contract():
+def test_multimodal_vlm_openai_multimodal_contract():
     provider = VLMProvider(
         "https://router.huggingface.co/v1/chat/completions",
         "hf_test",
-        model="Qwen/Qwen2.5-VL-3B-Instruct",
+        model="Qwen/Qwen3-VL-2B-Instruct",
     )
     seen = {}
 
@@ -34,7 +34,7 @@ def test_qwen25_vl_openai_multimodal_contract():
 
     assert result == "Visible document text."
     assert seen["url"] == "https://router.huggingface.co/v1/chat/completions"
-    assert seen["json"]["model"] == "Qwen/Qwen2.5-VL-3B-Instruct"
+    assert seen["json"]["model"] == "Qwen/Qwen3-VL-2B-Instruct"
     content = seen["json"]["messages"][0]["content"]
     assert content[0]["text"] == "Transcribe faithfully"
     assert content[1]["image_url"]["url"].startswith("data:image/png;base64,")
@@ -108,7 +108,7 @@ def _large_test_image(width=2200, height=1800):
     return output.getvalue()
 
 
-def test_qwen25_vl_bounds_visual_payload_before_request():
+def test_multimodal_vlm_bounds_visual_payload_before_request():
     provider = VLMProvider(
         "https://router.huggingface.co/v1/chat/completions",
         "hf_test",
@@ -134,7 +134,7 @@ def test_qwen25_vl_bounds_visual_payload_before_request():
     assert provider.last_payload_reduced is True
 
 
-def test_qwen25_vl_retries_413_with_smaller_payload():
+def test_multimodal_vlm_retries_413_with_smaller_payload():
     provider = VLMProvider(
         "https://router.huggingface.co/v1/chat/completions",
         "hf_test",

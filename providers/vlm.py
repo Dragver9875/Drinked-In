@@ -12,7 +12,7 @@ from providers.http import APIClient, ProviderError
 
 
 class VLMProvider:
-    """Qwen2.5-VL shared multimodal understanding adapter.
+    """Shared multimodal understanding adapter.
 
     Images, rendered PDF pages, and rendered PPTX slides all pass through this
     one provider. The default endpoint is Hugging Face's OpenAI-compatible
@@ -24,7 +24,7 @@ class VLMProvider:
         api_url: str,
         api_key: str,
         *,
-        model: str = "Qwen/Qwen2.5-VL-3B-Instruct:featherless-ai",
+        model: str = "Qwen/Qwen3-VL-2B-Instruct:featherless-ai",
         api_style: str = "openai",
         timeout_s: float = 120.0,
         retries: int = 2,
@@ -236,7 +236,7 @@ class VLMProvider:
                     return data[key]
         if isinstance(data, list) and data:
             return VLMProvider._parse_text(data[0])
-        raise ProviderError("Unsupported Qwen2.5-VL response shape")
+        raise ProviderError("Unsupported multimodal VLM response shape")
 
     @staticmethod
     def _media_type_for_path(path: Path) -> str:

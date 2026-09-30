@@ -54,7 +54,7 @@ def build_provider_registry(
             retries=settings.http_retries,
             max_tokens=settings.multimodal_max_tokens,
         ),
-        name="qwen2.5-vl",
+        name="multimodal-vlm",
     )
 
     registry.register(
